@@ -37,7 +37,7 @@ class AuthController extends BaseController
             'password' => Hash::make($request->password)
         ]);
         $success['token'] =  $user->createToken('MyApp')->accessToken;
-        $success['name'] =  $user->name;
+        $success['name'] =  $user->first_name;
         return $this->sendResponse($success, 'User register successfully.');
     }
 
@@ -49,6 +49,13 @@ class AuthController extends BaseController
      */
     public function login(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|',
+            'password' => 'required|min:6'
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
+        }
         $user = User::where('email', $request->email)->first();
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
@@ -60,15 +67,5 @@ class AuthController extends BaseController
         } else {
             return $this->sendError('Validation Error.', 'User does not exist', 422);
         }
-    }
-
-    /**
-     * Returns Authenticated User Details
-     *
-     * @return JsonResponse
-     */
-    public function details()
-    {
-        return response()->json(['user' => auth()->user()], 200);
     }
 }

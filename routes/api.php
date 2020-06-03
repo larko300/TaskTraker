@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', 'API\AuthController@login');
 Route::post('register', 'API\AuthController@register');
 
-//Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:api')->group(function () {
+    Route::resource('users', 'API\UserController', [
+        'except' => [ 'show', 'edit' ]
+    ]);
 //    Route::resource('tasks', 'API\TaskController');
-//});
+});
