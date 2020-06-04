@@ -8,7 +8,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Validator;
-use function GuzzleHttp\Promise\all;
 
 class UserController extends BaseController
 {
@@ -19,7 +18,7 @@ class UserController extends BaseController
      */
     public function index()
     {
-        $user = User::all();
+        $user = User::orderBy('id', 'desc')->with('tasks')->get();
         return $this->sendResponse($user->toArray(), 'Users retrieved successfully.');
     }
 

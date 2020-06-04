@@ -19,7 +19,11 @@ Route::post('register', 'API\AuthController@register');
 
 Route::middleware('auth:api')->group(function () {
     Route::resource('users', 'API\UserController', [
-        'except' => [ 'show', 'edit' ]
+        'except' => [ 'show', 'edit', 'create' ]
     ]);
-//    Route::resource('tasks', 'API\TaskController');
+    Route::resource('tasks', 'API\TaskController', [
+        'except' => [ 'show', 'edit', 'create' ]
+    ]);
+    Route::put('tasks/{task}/status', 'API\TaskController@setStatus');
+    Route::put('users/{user}/tasks/{task}', 'API\TaskController@setUserTask');
 });
